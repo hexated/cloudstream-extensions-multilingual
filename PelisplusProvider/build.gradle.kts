@@ -1,6 +1,3 @@
-dependencies {
-    implementation(project(mapOf("path" to ":PelisplusProviderTemplate")))
-}
 // use an integer for version numbers
 version = 1
 

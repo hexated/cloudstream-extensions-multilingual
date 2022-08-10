@@ -5,7 +5,7 @@ version = 1
 cloudstream {
     // All of these properties are optional, you can safely remove them
 
-     description = "Also includes Dopebox, Solarmovie and 2embed"
+     description = "Includes PinoyMoviePediaProvider and PinoyMoviesEsProvider"
     // authors = listOf("Cloudburst")
 
     /**

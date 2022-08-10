@@ -5,12 +5,12 @@ import com.lagradost.cloudstream3.plugins.Plugin
 import android.content.Context
 
 @CloudstreamPlugin
-class SflixProviderPlugin : Plugin() {
+class PinoyMoviePediaProviderPlugin : Plugin() {
     override fun load(context: Context) {
         // All providers should be added in this manner. Please don't edit the providers list directly.
-        registerMainAPI(SflixProvider())
-        registerMainAPI(SolarmovieProvider())
-        registerMainAPI(TwoEmbedProvider())
-        registerMainAPI(DopeboxProvider())
+        registerMainAPI(PinoyMoviePediaProvider())
+        registerMainAPI(PinoyMoviesEsProvider())
+        registerExtractorAPI(Diasfem())
+        registerExtractorAPI(XStreamCdn())
     }
 }
