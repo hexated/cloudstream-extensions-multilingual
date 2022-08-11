@@ -17,6 +17,6 @@ cloudstream {
     * */
     status = 1 // will be 3 if unspecified
 
-    // Set to true to get an 18+ symbol next to the plugin
-    adult = false // will be false if unspecified
+    
+    iconUrl = "https://www.google.com/s2/favicons?domain=hdrezka19139.org&sz=24"
 }
