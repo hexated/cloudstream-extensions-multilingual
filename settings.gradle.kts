@@ -97,5 +97,6 @@ include(
     "JKAnimeProvider",
     "AnimekisaProvider",
     "AnimeIndoProvider",
-    "KuronimeProvider"
+    "KuronimeProvider",
+    "EjaTv",
 )
