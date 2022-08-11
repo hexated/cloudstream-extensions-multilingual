@@ -12,5 +12,6 @@ class SflixProviderPlugin : Plugin() {
         registerMainAPI(SolarmovieProvider())
         registerMainAPI(TwoEmbedProvider())
         registerMainAPI(DopeboxProvider())
+        registerMainAPI(ZoroProvider())
     }
 }
