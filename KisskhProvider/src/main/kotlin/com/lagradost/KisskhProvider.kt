@@ -22,7 +22,7 @@ class KisskhProvider : MainAPI() {
     )
 
     override val mainPage = mainPageOf(
-        "&type=2&sub=0&country=2&status=0&order=1" to "Movie Pupular",
+        "&type=2&sub=0&country=2&status=0&order=1" to "Movie Popular",
         "&type=2&sub=0&country=2&status=0&order=2" to "Movie Last Update",
         "&type=1&sub=0&country=2&status=0&order=1" to "TVSeries Popular",
         "&type=1&sub=0&country=2&status=0&order=2" to "TVSeries Last Update",
