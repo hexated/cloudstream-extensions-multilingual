@@ -27,11 +27,15 @@ class OlgplyProvider : TmdbProvider() {
 //        subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ) {
+        println("URKKKKKKKKKK $url")
         val foundVideo = WebViewResolver(
-            Regex("""movies4discord""")
+            Regex("""\.m3u8|i7njdjvszykaieynzsogaysdgb0hm8u1mzubmush4maopa4wde\.com""")
         ).resolveUsingWebView(
-            requestCreator("GET", url)
-        ).first ?: return
+            requestCreator(
+                "GET", url, referer = "https://olgply.xyz/"
+            )
+        )
+            .first ?: return
 
         callback.invoke(
             ExtractorLink(
@@ -39,7 +43,8 @@ class OlgplyProvider : TmdbProvider() {
                 "Movies4Discord",
                 foundVideo.url.toString(),
                 "",
-                Qualities.Unknown.value
+                Qualities.Unknown.value,
+                true
             )
         )
     }
@@ -58,13 +63,13 @@ class OlgplyProvider : TmdbProvider() {
         val apiUrl =
             "https://olgply.xyz/${tmdbId}${mappedData.season?.let { "/$it" } ?: ""}${mappedData.episode?.let { "/$it" } ?: ""}"
         val html =
-            app.get(apiUrl).text
+            app.get(apiUrl, referer = "https://olgply.xyz/").text
         val rhino = Context.enter()
         rhino.optimizationLevel = -1
         val scope: Scriptable = rhino.initSafeStandardObjects()
         val documentJs = """
             Plyr = function(){};
-            
+
             hlsPrototype = {
                 loadSource(url) {
                     this.url = url;
@@ -73,7 +78,7 @@ class OlgplyProvider : TmdbProvider() {
 
             function Hls() {};
             Hls.isSupported = function(){return true};
-            
+
             Hls.prototype = hlsPrototype;
             Hls.prototype.constructor = Hls;
 
