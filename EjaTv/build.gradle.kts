@@ -18,5 +18,4 @@ cloudstream {
     status = 1 // will be 3 if unspecified
 
     
-    adult = false // will be false if unspecified
-}
+    }

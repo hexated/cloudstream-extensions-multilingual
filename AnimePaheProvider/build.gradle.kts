@@ -22,5 +22,4 @@ cloudstream {
         "OVA",
     )
 
-    adult = false // will be false if unspecified
-}
+    }

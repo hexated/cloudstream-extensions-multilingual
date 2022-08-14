@@ -20,5 +20,4 @@ cloudstream {
         "AsianDrama"
     )
 
-    adult = false // will be false if unspecified
-}
+    }
