@@ -22,5 +22,5 @@ cloudstream {
         "AnimeMovie",
         "TvSeries",
     )
-
-    }
+    iconUrl = "https://raw.githubusercontent.com/recloudstream/cloudstream-extensions/master/SuperStream/icon.png"
+}
