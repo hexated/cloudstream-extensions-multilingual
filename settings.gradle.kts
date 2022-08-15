@@ -6,7 +6,6 @@ rootProject.name = "CloudstreamPlugins"
 // Plugins are included like this
 include(
     "XcineProvider",
-    "StreamingcommunityProvider",
     "FilmanProvider",
     "VMoveeProvider",
     "AsiaFlixProvider",
@@ -30,7 +29,6 @@ include(
     "NginxProvider",
     "SoaptwoDayProvider",
     "PinoyHDXyzProvider",
-    "AltadefinizioneProvider",
     "PelisflixProvider",
     "SflixProvider",
     "ElifilmsProvider",
@@ -39,12 +37,9 @@ include(
     "VfSerieProvider",
     "LayarKacaProvider",
     "EntrepeliculasyseriesProvider",
-    "TantiFilmProvider",
     "SuperStream",
-    "FilmpertuttiProvider",
     "FrenchStreamProvider",
     "MyCimaProvider",
-    "IlGenioDelloStreamingProvider",
     "EstrenosDoramasProvider",
 //    "HDTodayProvider",
     "DubokuProvider",
@@ -66,7 +61,6 @@ include(
 
 
     // <--- Anime providers --->
-    "AnimeSaturnProvider",
     "DubbedAnimeProvider",
     "TocanimeProvider",
     "NontonAnimeIDProvider",
@@ -78,7 +72,6 @@ include(
     "AnimeFlickProvider",
     "AnimeSailProvider",
     "MonoschinosProvider",
-    "AniPlayProvider",
     "AnimefenixProvider",
     "NeonimeProvider",
     "KawaiifuProvider",
@@ -90,7 +83,6 @@ include(
     "AniflixProvider",
     "GogoanimeProvider",
     "AnimeflvnetProvider",
-    "AnimeWorldProvider",
     "KuramanimeProvider",
     "GomunimeProvider",
     "OtakudesuProvider",
