@@ -1,6 +1,10 @@
 **⚠️ This is currently under development, dont use it yet if you're not comfortable with constantly merging new changes**
 
-# Cloudstream 3 Movies Repository
+# Cloudstream English Plugin Repository 🇬🇧
+
+All available repositories: https://recloudstream.github.io/repos/
+
+Plugin json: https://raw.githubusercontent.com/recloudstream/cloudstream-extensions/builds/plugins.json
 
 Not all extractors are included, only those need to compile. We need to use loadExtractor in the future.
 
