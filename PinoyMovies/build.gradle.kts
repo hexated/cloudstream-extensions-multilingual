@@ -3,6 +3,7 @@ version = 1
 
 
 cloudstream {
+    language = "tl"
     // All of these properties are optional, you can safely remove them
 
     description = "Includes PinoyMoviePediaProvider and PinoyMoviesEsProvider"
