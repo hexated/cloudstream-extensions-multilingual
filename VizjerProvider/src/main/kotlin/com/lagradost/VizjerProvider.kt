@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
-import android.util.Log
 import com.lagradost.cloudstream3.utils.loadExtractor
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
@@ -27,10 +26,11 @@ class VizjerProvider : MainAPI() {
         for (l in lists) {
             val title = capitalizeString(l.parent()!!.select("h3").text().lowercase())
             val items = l.select(".poster").map { i ->
-                val name = i.select("a[href]").attr("title")
-                val href = i.select("a[href]").attr("href")
+                val a = i.parent()!!
+                val name = a.attr("title")
+                val href = a.attr("href")
                 val poster = i.select("img[src]").attr("src")
-                val year = l.select(".year").text().toIntOrNull()
+                val year = a.select(".year").text().toIntOrNull()
                 MovieSearchResponse(
                     name,
                     properUrl(href)!!,
@@ -48,7 +48,6 @@ class VizjerProvider : MainAPI() {
     override suspend fun search(query: String): List<SearchResponse> {
         val url = "$mainUrl/wyszukaj?phrase=$query"
         val document = app.get(url).document
-        Log.d("vizjer", document.toString())
         val lists = document.select("#advanced-search > div")
         val movies = lists[1].select("div:not(.clearfix)")
         val series = lists[3].select("div:not(.clearfix)")
@@ -62,15 +61,15 @@ class VizjerProvider : MainAPI() {
                 if (type === TvType.TvSeries) {
                     TvSeriesSearchResponse(
                         name,
-                        properUrl(href) ?: "",
+                        properUrl(href)!!,
                         this.name,
                         type,
-                        properUrl(img) ?: "",
+                        properUrl(img)!!,
                         null,
                         null
                     )
                 } else {
-                    MovieSearchResponse(name, properUrl(href) ?: "", this.name, type, properUrl(img) ?: "", null)
+                    MovieSearchResponse(name, properUrl(href)!!, this.name, type, properUrl(img)!!, null)
                 }
             }
         }
@@ -91,9 +90,9 @@ class VizjerProvider : MainAPI() {
         val plot = document.select(".description").text()
         val episodesElements = document.select("#episode-list a[href]")
         if (episodesElements.isEmpty()) {
-            return MovieLoadResponse(title, properUrl(url) ?: "", name, TvType.Movie, data, properUrl(posterUrl) ?: "", null, plot)
+            return MovieLoadResponse(title, properUrl(url)!!, name, TvType.Movie, data, properUrl(posterUrl)!!, null, plot)
         }
-        title = document.selectFirst(".info")?.parent()?.select("h2")?.text() ?: ""
+        title = document.selectFirst(".info")?.parent()?.select("h2")?.text()!!
         val episodes = episodesElements.mapNotNull { episode ->
             val e = episode.text()
             val regex = Regex("""\[s(\d{1,3})e(\d{1,3})]""").find(e) ?: return@mapNotNull null
@@ -108,11 +107,11 @@ class VizjerProvider : MainAPI() {
 
         return TvSeriesLoadResponse(
             title,
-            properUrl(url) ?: "",
+            properUrl(url)!!,
             name,
             TvType.TvSeries,
             episodes,
-            properUrl(posterUrl) ?: "",
+            properUrl(posterUrl)!!,
             null,
             plot
         )
@@ -127,7 +126,7 @@ class VizjerProvider : MainAPI() {
         val document = if (data.startsWith("http"))
             app.get(data).document.select("#link-list").first()
         else if (data.startsWith("URL"))
-            app.get(properUrl(data) ?: "").document.select("#link-list").first()
+            app.get(properUrl(data)!!).document.select("#link-list").first()
         else Jsoup.parse(data)
 
         document?.select(".link-to-video")?.apmap { item ->
