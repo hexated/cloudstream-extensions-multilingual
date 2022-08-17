@@ -13,7 +13,7 @@ class Zaluknij1Provider : ZaluknijProvider() {
     override var name = "Zaluknij.xyz"
 }
 
-class ZaluknijProvider : MainAPI() {
+open class ZaluknijProvider : MainAPI() {
     override var mainUrl = "https://zaluknij.cc/"
     override var name = "Zaluknij.cc"
     override var lang = "pl"
