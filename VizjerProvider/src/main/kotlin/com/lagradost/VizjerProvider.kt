@@ -33,10 +33,10 @@ class VizjerProvider : MainAPI() {
                 val year = l.select(".year").text().toIntOrNull()
                 MovieSearchResponse(
                     name,
-                    href,
+                    properUrl(href)!!,
                     this.name,
                     TvType.Movie,
-                    poster,
+                    properUrl(poster)!!,
                     year
                 )
             }
@@ -62,15 +62,15 @@ class VizjerProvider : MainAPI() {
                 if (type === TvType.TvSeries) {
                     TvSeriesSearchResponse(
                         name,
-                        href,
+                        properUrl(href) ?: "",
                         this.name,
                         type,
-                        img,
+                        properUrl(img) ?: "",
                         null,
                         null
                     )
                 } else {
-                    MovieSearchResponse(name, href, this.name, type, img, null)
+                    MovieSearchResponse(name, properUrl(href) ?: "", this.name, type, properUrl(img) ?: "", null)
                 }
             }
         }
@@ -91,7 +91,7 @@ class VizjerProvider : MainAPI() {
         val plot = document.select(".description").text()
         val episodesElements = document.select("#episode-list a[href]")
         if (episodesElements.isEmpty()) {
-            return MovieLoadResponse(title, url, name, TvType.Movie, data, posterUrl, null, plot)
+            return MovieLoadResponse(title, properUrl(url) ?: "", name, TvType.Movie, data, properUrl(posterUrl) ?: "", null, plot)
         }
         title = document.selectFirst(".info")?.parent()?.select("h2")?.text() ?: ""
         val episodes = episodesElements.mapNotNull { episode ->
@@ -108,11 +108,11 @@ class VizjerProvider : MainAPI() {
 
         return TvSeriesLoadResponse(
             title,
-            url,
+            properUrl(url) ?: "",
             name,
             TvType.TvSeries,
             episodes,
-            posterUrl,
+            properUrl(posterUrl) ?: "",
             null,
             plot
         )
@@ -126,6 +126,8 @@ class VizjerProvider : MainAPI() {
     ): Boolean {
         val document = if (data.startsWith("http"))
             app.get(data).document.select("#link-list").first()
+        else if (data.startsWith("URL"))
+            app.get(properUrl(data) ?: "").document.select("#link-list").first()
         else Jsoup.parse(data)
 
         document?.select(".link-to-video")?.apmap { item ->
@@ -134,6 +136,17 @@ class VizjerProvider : MainAPI() {
             loadExtractor(link, subtitleCallback, callback)
         }
         return true
+    }
+
+    private fun properUrl(inUrl: String?): String? {
+        if (inUrl == null) return null
+
+        return fixUrl(
+            inUrl.replace(
+                "^URL".toRegex(),
+                "/"
+            )
+        )
     }
 }
 
