@@ -1,6 +1,4 @@
-**⚠️ This is currently under development, dont use it yet if you're not comfortable with constantly merging new changes**
-
-# Cloudstream English Plugin Repository 🇬🇧
+# Cloudstream Non-English Plugin Repository
 
 All available repositories: https://recloudstream.github.io/repos/
 
