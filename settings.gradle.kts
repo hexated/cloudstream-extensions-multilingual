@@ -4,91 +4,18 @@ rootProject.name = "CloudstreamPlugins"
 // to the includes below.
 
 // Plugins are included like this
-include(
-    "XcineProvider",
-    "FilmanProvider",
-    "VMoveeProvider",
-    "AsiaFlixProvider",
-    "DoramasYTProvider",
-//    "SflixProProvider",
-    "PinoyMovies",
-    "SeriesflixProvider",
-    "TrailersTwoProvider",
-    "KisskhProvider",
-    "VidstreamBundle",
-    "RebahinProvider",
-    "AllMoviesForYouProvider",
-    "UakinoProvider",
-    "DramaidProvider",
-    "FaselHDProvider",
-    "MeloMovieProvider",
-    "PelisplusProvider",
-    "YomoviesProvider",
-    "AkwamProvider",
-    "IdlixProvider",
-    "NginxProvider",
-    "SoaptwoDayProvider",
-    "PinoyHDXyzProvider",
-    "PelisflixProvider",
-    "SflixProvider",
-    "ElifilmsProvider",
-    "VidSrcProvider",
-    "EgyBestProvider",
-    "VfSerieProvider",
-    "LayarKacaProvider",
-    "EntrepeliculasyseriesProvider",
-    "SuperStream",
-    "FrenchStreamProvider",
-    "MyCimaProvider",
-    "EstrenosDoramasProvider",
-//    "HDTodayProvider",
-    "DubokuProvider",
-    "HDMProvider",
-    "PhimmoichillProvider",
-    "OlgplyProvider",
-    "PeliSmartProvider",
-    "VfFilmProvider",
-    "IHaveNoTvProvider",
-    "CuevanaProvider",
-    "CinecalidadProvider",
-    "HDMovie5",
-    "HDrezkaProvider",
-    "PelisplusHDProvider",
-    "MultiplexProvider",
-    //"BflixProvider",
-//    "FmoviesToProvider",
-    "TheFlixToProvider",
+val disabled = listOf<String>()
+
+File(rootDir, ".").eachDir { dir ->
+    if (!disabled.contains(dir.name) && File(dir, "build.gradle.kts").exists()) {
+        include(dir.name)
+    }
+}
+
+fun File.eachDir(block: (File) -> Unit) {
+    listFiles()?.filter { it.isDirectory }?.forEach { block(it) }
+}
 
 
-    // <--- Anime providers --->
-    "DubbedAnimeProvider",
-    "TocanimeProvider",
-    "NontonAnimeIDProvider",
-    "WcofunProvider",
-    "TenshiProvider",
-    "KimCartoonProvider",
-    "AllAnimeProvider",
-    "WatchCartoonOnlineProvider",
-    "AnimeFlickProvider",
-    "AnimeSailProvider",
-    "MonoschinosProvider",
-    "AnimefenixProvider",
-    "NeonimeProvider",
-    "KawaiifuProvider",
-    "OploverzProvider",
-    "MundoDonghuaProvider",
-    "NineAnimeProvider",
-    "AnimePaheProvider",
-    "AnimeflvIOProvider",
-    "AniflixProvider",
-    "GogoanimeProvider",
-    "AnimeflvnetProvider",
-    "KuramanimeProvider",
-    "GomunimeProvider",
-    "OtakudesuProvider",
-    "JKAnimeProvider",
-    "AnimekisaProvider",
-    "AnimeIndoProvider",
-    "KuronimeProvider",
-    "EjaTv",
-)
+// To only include a single project, comment out the previous lines (except the first one), and include your plugin like so:
+// include("PluginName")
