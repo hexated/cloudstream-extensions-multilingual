@@ -2,9 +2,9 @@ package com.lagradost
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.cloudstream3.*
-import com.lagradost.cloudstream3.animeproviders.NineAnimeProvider.Companion.decodeVrf
-import com.lagradost.cloudstream3.animeproviders.NineAnimeProvider.Companion.encode
-import com.lagradost.cloudstream3.animeproviders.NineAnimeProvider.Companion.encodeVrf
+import com.lagradost.NineAnimeApi.decodeVrf
+import com.lagradost.NineAnimeApi.encode
+import com.lagradost.NineAnimeApi.encodeVrf
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.loadExtractor
