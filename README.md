@@ -2,8 +2,6 @@
 
 All available repositories: https://recloudstream.github.io/repos/
 
-Plugin json: https://raw.githubusercontent.com/recloudstream/cloudstream-extensions/builds/plugins.json
-
 Not all extractors are included, only those need to compile. We need to use loadExtractor in the future.
 
 ## Getting started with writing your first plugin
