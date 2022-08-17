@@ -8,9 +8,14 @@ import com.lagradost.cloudstream3.utils.loadExtractor
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 
-class ZaluknijProvider : MainAPI() {
+class Zaluknij1Provider : ZaluknijProvider() {
     override var mainUrl = "https://zaluknij.xyz/"
-    override var name = "zaluknij.xyz"
+    override var name = "Zaluknij.xyz"
+}
+
+class ZaluknijProvider : MainAPI() {
+    override var mainUrl = "https://zaluknij.cc/"
+    override var name = "Zaluknij.cc"
     override var lang = "pl"
     override val hasMainPage = true
     override val usesWebView = true
