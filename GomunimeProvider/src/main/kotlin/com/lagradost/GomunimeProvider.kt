@@ -25,6 +25,9 @@ class GomunimeProvider : MainAPI() {
     )
 
     companion object {
+
+        private const val mainServer = "https://path.onicdn.xyz/app/rapi.php"
+
         fun getType(t: String): TvType {
             return if (t.contains("OVA") || t.contains("Special")) TvType.OVA
             else if (t.contains("Movie")) TvType.AnimeMovie
@@ -152,14 +155,16 @@ class GomunimeProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit
     ): Boolean {
         val document = app.get(data).document
-
         val scriptData = document.select("aside.sidebar > script").dataNodes().toString()
         val key = scriptData.substringAfter("var a_ray = '").substringBefore("';")
         val title = scriptData.substringAfter("var judul_postingan = \"").substringBefore("\";")
+            .replace(" ", "+")
+        val image = document.select("img#tempvid").last()?.attr("src").toString()
 
         val sources: List<Pair<String, String>> = app.post(
-            url = "https://path.gomuni.me/app/vapi.php",
-            data = mapOf("data" to key, "judul" to title, "func" to "mirror")
+            url = mainServer,
+            data = mapOf("data" to key, "gambar" to image, "judul" to title, "func" to "mirror"),
+            referer = "$mainUrl/"
         ).document.select("div.gomunime-server-mirror").map {
             Pair(
                 it.attr("data-vhash"),
@@ -171,24 +176,25 @@ class GomunimeProvider : MainAPI() {
             safeApiCall {
                 when {
                     it.second.contains("frame") -> {
-                        loadExtractor(it.first, data, subtitleCallback, callback)
+                        loadExtractor(it.first, mainUrl, subtitleCallback, callback)
                     }
-                    it.second.contains("hls") -> {
-                        app.post(
-                            url = "https://path.gomuni.me/app/vapi.php",
-                            data = mapOf("fid" to it.first, "func" to "hls")
-                        ).text.let { link ->
-                            M3u8Helper.generateM3u8(
-                                this.name,
-                                link,
-                                "$mainUrl/",
-                                headers = mapOf("Origin" to mainUrl)
-                            ).forEach(callback)
-                        }
-                    }
+                    // Skip for now
+//                    it.second.contains("hls") -> {
+//                        app.post(
+//                            url = mainServer,
+//                            data = mapOf("fid" to it.first, "func" to "hls")
+//                        ).text.let { link ->
+//                            M3u8Helper.generateM3u8(
+//                                this.name,
+//                                link,
+//                                "$mainUrl/",
+//                                headers = mapOf("Origin" to mainUrl)
+//                            ).forEach(callback)
+//                        }
+//                    }
                     it.second.contains("mp4") -> {
                         app.post(
-                            url = "https://path.gomuni.me/app/vapi.php",
+                            url = mainServer,
                             data = mapOf("data" to it.first, "func" to "blogs")
                         ).parsed<List<MobiSource>>().map {
                             callback.invoke(
