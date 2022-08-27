@@ -18,10 +18,9 @@ cloudstream {
      * */
     status = 1 // will be 3 if unspecified
     tvTypes = listOf(
-        "TvSeries",
-        "Movie",
+        "TvSeries"
     )
 
 
-    iconUrl = "https://www.google.com/s2/favicons?domain=tantifilm.autos&sz=%size%"
+    iconUrl = "https://www.google.com/s2/favicons?domain=eurostreaming.social&sz=%size%"
 }

@@ -4,6 +4,7 @@ import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.LoadResponse.Companion.addTrailer
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.loadExtractor
+import com.lagradost.cloudstream3.network.CloudflareKiller
 
 
 class TantifilmProvider : MainAPI() {
@@ -23,23 +24,27 @@ class TantifilmProvider : MainAPI() {
         Pair("$mainUrl/watch-genre/film-aggiornati/page/", "Ultimi Film Aggiornati"),
     )
 
+    private val interceptor = CloudflareKiller()
+
     override suspend fun getMainPage(
         page: Int,
-        request : MainPageRequest
+        request: MainPageRequest
     ): HomePageResponse {
         val url = request.data + page
-        val soup = app.get(url).document
+        val soup = app.get(url, interceptor = interceptor).document
         val home = soup.select("div.media3").map {
             val title = it.selectFirst("p")!!.text().substringBefore("(")
             val link = it.selectFirst("a")!!.attr("href")
+            val posterUrl = it.selectFirst("img")!!.attr("src")
             TvSeriesSearchResponse(
                 title,
                 link,
                 this.name,
                 TvType.Movie,
-                it.selectFirst("img")!!.attr("src"),
+                posterUrl,
                 null,
                 null,
+                posterHeaders = interceptor.getCookieHeaders(url).toMap()
             )
         }
         return newHomePageResponse(request.name, home)
@@ -48,7 +53,8 @@ class TantifilmProvider : MainAPI() {
     override suspend fun search(query: String): List<SearchResponse> {
         val queryformatted = query.replace(" ", "+")
         val url = "$mainUrl/search/$queryformatted"
-        val doc = app.get(url).document
+
+        val doc = app.get(url, interceptor = interceptor).document
         return doc.select("div.film.film-2").map {
             val href = it.selectFirst("a")!!.attr("href")
             val poster = it.selectFirst("img")!!.attr("src")
@@ -59,14 +65,16 @@ class TantifilmProvider : MainAPI() {
                 this.name,
                 TvType.Movie,
                 poster,
-                null
+                null,
+                posterHeaders = interceptor.getCookieHeaders(url).toMap()
             )
 
         }
     }
 
     override suspend fun load(url: String): LoadResponse {
-        val document = app.get(url).document
+
+        val document = app.get(url, interceptor = interceptor).document
         val type = if (document.selectFirst("div.category-film")!!.text().contains("Serie")
                 .not()
         ) TvType.Movie else TvType.TvSeries
@@ -97,7 +105,8 @@ class TantifilmProvider : MainAPI() {
                 this.name,
                 TvType.Movie,
                 poster,
-                null
+                null,
+                posterHeaders = interceptor.getCookieHeaders(url).toMap()
             )
 
         }
@@ -149,6 +158,7 @@ class TantifilmProvider : MainAPI() {
                 this.rating = rating
                 this.recommendations = recomm
                 addTrailer(trailerurl)
+                this.posterHeaders = interceptor.getCookieHeaders(url).toMap()
             }
         } else {
             val url2 = document.selectFirst("iframe")!!.attr("src")
@@ -161,8 +171,8 @@ class TantifilmProvider : MainAPI() {
 
             val actors: List<ActorData>? = if (Linkactor.isNotEmpty()) {
                 val actorpage = app.get(Linkactor + "cast/").document
-                actorpage.select("article.membro-cast").filter {
-                    it -> it.selectFirst("img")
+                actorpage.select("article.membro-cast").filter { it ->
+                    it.selectFirst("img")
                         ?.attr("src") != "https://www.filmtv.it/imgbank/DUMMY/no_portrait.jpg"
                 }.mapNotNull {
                     val name = it.selectFirst("div.info > h3")!!.text()
@@ -209,6 +219,7 @@ class TantifilmProvider : MainAPI() {
                 this.tags = tags
                 this.duration = duratio
                 this.actors = actors
+                this.posterHeaders = interceptor.getCookieHeaders(url).toMap()
                 addTrailer(trailerurl)
 
             }
@@ -223,7 +234,7 @@ class TantifilmProvider : MainAPI() {
     ): Boolean {
         val doc = app.get(data).document
         val iframe =
-            doc.select("option").map { fixUrl(it.attr("value")) }.filter { it.contains("label") }
+            doc.select("option").map { it.attr("value") }.filter { it.contains("label") }
         iframe.forEach { id ->
             val doc2 = app.get(id).document
             val id2 = app.get(doc2.selectFirst("iframe")!!.attr("src")).url
