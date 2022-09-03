@@ -97,10 +97,10 @@ class PhimmoichillProvider : MainAPI() {
             document.select("ul.entry-meta.block-film li:nth-child(7) span").text().toRatingInt()
         val actors = document.select("ul.entry-meta.block-film li:last-child a").map { it.text() }
         val recommendations = document.select("ul#list-film-realted li.item").mapNotNull {
-                val titleHeader = document.select("p") ?: return@mapNotNull null
-                val recUrl = titleHeader.attr("href")) ?: return@mapNotNull null
+                val titleHeader = it.select("p") ?: return@mapNotNull null
+                val recUrl = titleHeader.attr("href") ?: return@mapNotNull null
                 val recTitle = titleHeader.text() ?: return@mapNotNull null
-                val poster = element.select("img").attr("src")
+                val poster = it.select("img").attr("src")
                 MovieSearchResponse(
                     recTitle,
                     recUrl,
