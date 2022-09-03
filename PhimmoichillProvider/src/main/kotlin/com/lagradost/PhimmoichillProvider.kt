@@ -89,16 +89,25 @@ class PhimmoichillProvider : MainAPI() {
             .toIntOrNull()
         val tvType = if (document.select("div.latest-episode").isNotEmpty()
         ) TvType.TvSeries else TvType.Movie
-        val description = document.select("div#film-content-wrapper").text().trim()
+        val description = document.select("div#film-content").text().trim()
         val trailer =
             document.select("div#trailer script").last()?.data()?.substringAfter("file: \"")
                 ?.substringBefore("\",")
         val rating =
             document.select("ul.entry-meta.block-film li:nth-child(7) span").text().toRatingInt()
         val actors = document.select("ul.entry-meta.block-film li:last-child a").map { it.text() }
-        val recommendations = document.select("ul#list-film-realted li.item").map {
-            it.toSearchResult()
-        }
+        val recommendations = document.select("ul#list-film-realted li.item").mapNotNull {
+                val titleHeader = element.select("li.item > p") ?: return null
+                val recUrl = fixUrlNull(titleHeader.attr("href")) ?: return null
+                val recTitle = titleHeader.text() ?: return null
+                val poster = element.select("li.item > .lazyloaded > img").attr("src")
+                MovieSearchResponse(
+                    recTitle,
+                    recUrl,
+                    this.name,
+                    poster
+                )
+            }
 
         return if (tvType == TvType.TvSeries) {
             val docEpisodes = app.get(link).document
