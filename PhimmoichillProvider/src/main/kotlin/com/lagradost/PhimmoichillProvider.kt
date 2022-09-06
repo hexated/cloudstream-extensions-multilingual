@@ -163,62 +163,62 @@ class PhimmoichillProvider : MainAPI() {
             }
 
         listOf(
-            Pair("https://so-trym.topphimmoi.org/hlspm/$key", "PMFAST"),
-            Pair("https://dash.megacdn.xyz/hlspm/$key", "PMHLS"),
+            Pair("https://so-trym.topphimmoi.org/raw/$key/index.m3u8", "PMFAST"),
+            Pair("https://dash.megacdn.xyz/raw/$key/index.m3u8", "PMHLS"),
             Pair("https://dash.megacdn.xyz/dast/$key/index.m3u8", "PMBK")
         ).apmap { (link, source) ->
             safeApiCall {
-                if (source == "PMBK") {
-                    callback.invoke(
-                        ExtractorLink(
-                            source,
-                            source,
-                            link,
-                            referer = "$mainUrl/",
-                            quality = Qualities.P1080.value,
-                            isM3u8 = true
-                        )
+//                if (source == "PMBK") {
+                callback.invoke(
+                    ExtractorLink(
+                        source,
+                        source,
+                        link,
+                        referer = "$mainUrl/",
+                        quality = Qualities.P1080.value,
+                        isM3u8 = true,
                     )
-                } else {
-                    val playList = app.get(link, referer = "$mainUrl/")
-                        .parsedSafe<ResponseM3u>()?.main?.segments?.map { segment ->
-                            PlayListItem(
-                                segment.link,
-                                (segment.du.toFloat() * 1_000_000).toLong()
-                            )
-                        }
-
-                    callback.invoke(
-                        ExtractorLinkPlayList(
-                            source,
-                            source,
-                            playList ?: return@safeApiCall,
-                            referer = "$mainUrl/",
-                            quality = Qualities.P1080.value,
-                            headers = if (source == "PMHLS") {
-                                mapOf("Origin" to mainUrl)
-                            } else {
-                                mapOf()
-                            }
-                        )
-                    )
-                }
+                )
+//                } else {
+//                    val playList = app.get(link, referer = "$mainUrl/")
+//                        .parsedSafe<ResponseM3u>()?.main?.segments?.map { segment ->
+//                            PlayListItem(
+//                                segment.link,
+//                                (segment.du.toFloat() * 1_000_000).toLong()
+//                            )
+//                        }
+//
+//                    callback.invoke(
+//                        ExtractorLinkPlayList(
+//                            source,
+//                            source,
+//                            playList ?: return@safeApiCall,
+//                            referer = "$mainUrl/",
+//                            quality = Qualities.P1080.value,
+//                            headers = if (source == "PMHLS") {
+//                                mapOf("Origin" to mainUrl)
+//                            } else {
+//                                mapOf()
+//                            }
+//                        )
+//                    )
+//                }
             }
         }
         return true
     }
 
-    data class Segment(
-        @JsonProperty("du") val du: String,
-        @JsonProperty("link") val link: String,
-    )
-
-    data class DataM3u(
-        @JsonProperty("segments") val segments: List<Segment>?,
-    )
-
-    data class ResponseM3u(
-        @JsonProperty("2048p") val main: DataM3u?,
-    )
+//    data class Segment(
+//        @JsonProperty("du") val du: String,
+//        @JsonProperty("link") val link: String,
+//    )
+//
+//    data class DataM3u(
+//        @JsonProperty("segments") val segments: List<Segment>?,
+//    )
+//
+//    data class ResponseM3u(
+//        @JsonProperty("2048p") val main: DataM3u?,
+//    )
 
 }
