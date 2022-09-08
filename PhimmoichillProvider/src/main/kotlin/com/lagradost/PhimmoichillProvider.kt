@@ -1,6 +1,5 @@
 package com.lagradost
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.LoadResponse.Companion.addActors
 import com.lagradost.cloudstream3.LoadResponse.Companion.addTrailer
@@ -40,7 +39,14 @@ class PhimmoichillProvider : MainAPI() {
         val home = document.select("li.item").mapNotNull {
             it.toSearchResult()
         }
-        return newHomePageResponse(request.name, home)
+        return newHomePageResponse(
+            list = HomePageList(
+                name = request.name,
+                list = home,
+                isHorizontalImages = true
+            ),
+            hasNext = true
+        )
     }
 
     private fun decode(input: String): String? = URLDecoder.decode(input, "utf-8")
@@ -168,7 +174,6 @@ class PhimmoichillProvider : MainAPI() {
             Pair("https://dash.megacdn.xyz/dast/$key/index.m3u8", "PMBK")
         ).apmap { (link, source) ->
             safeApiCall {
-//                if (source == "PMBK") {
                 callback.invoke(
                     ExtractorLink(
                         source,
@@ -179,46 +184,9 @@ class PhimmoichillProvider : MainAPI() {
                         isM3u8 = true,
                     )
                 )
-//                } else {
-//                    val playList = app.get(link, referer = "$mainUrl/")
-//                        .parsedSafe<ResponseM3u>()?.main?.segments?.map { segment ->
-//                            PlayListItem(
-//                                segment.link,
-//                                (segment.du.toFloat() * 1_000_000).toLong()
-//                            )
-//                        }
-//
-//                    callback.invoke(
-//                        ExtractorLinkPlayList(
-//                            source,
-//                            source,
-//                            playList ?: return@safeApiCall,
-//                            referer = "$mainUrl/",
-//                            quality = Qualities.P1080.value,
-//                            headers = if (source == "PMHLS") {
-//                                mapOf("Origin" to mainUrl)
-//                            } else {
-//                                mapOf()
-//                            }
-//                        )
-//                    )
-//                }
             }
         }
         return true
     }
-
-//    data class Segment(
-//        @JsonProperty("du") val du: String,
-//        @JsonProperty("link") val link: String,
-//    )
-//
-//    data class DataM3u(
-//        @JsonProperty("segments") val segments: List<Segment>?,
-//    )
-//
-//    data class ResponseM3u(
-//        @JsonProperty("2048p") val main: DataM3u?,
-//    )
 
 }
